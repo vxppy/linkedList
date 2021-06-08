@@ -4,6 +4,8 @@ An implementation of linkedList
 This project is free to edit and make you can own version of this. But your help to improve this would be very helpful
 It is a class for JavaScript for Linked List. Currently only has Singly Linked List. Double Linked List is in progress.
 
+Singly Linked List can perform Doubly Linked List functions, but use more memory in that case
+
 ### Installing:
 Currently, you can't use `npm install linkedList` with this class, so you have to download this from here. *P.S. someone already has their own linkedlist on npm*
 
