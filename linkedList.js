@@ -29,6 +29,10 @@ class LinkedList {
         return this.#head
     }
 
+    get tail() {
+        return this.get(this.#size - 1)
+    }
+
     /**
      * Add item to end of list
      * @example
@@ -383,36 +387,35 @@ class LinkedList {
 
     iterator() {
         var _this = this
+        let curr = this.#head
         let index = 0
 
         const iterable = {
             /** @type {curr} */
             current: function () {
-                return _this.get(index)
+                return curr.value
             },
 
             /** @type {getNext} */
             next: function() {
-                if(index >= _this.#size) return
-                if(index < 0) index = -1
-                return _this.get(++index)
+                let data = curr.next
+                curr = data
+                index++
+                return data.value
             },
 
              /** @type {hNext} */
             hasNext: function() {
-                try {
-                    _this.get(index + 1)
-                    return true
-                } catch {
-                    return false
-                }
+                return curr.next != null
             },
 
             /** @type {getPrevious} */
             previous: function() {
                 if(index - 1 < 0) return
                 if(index >= _this.#size) index = _this.#size + 1
-                return _this.get(--index)
+
+                curr = _this.get(--index)
+                return curr
             },
 
             /** @type {hPrevious} */
@@ -430,7 +433,8 @@ class LinkedList {
                 if(index + value < 0 || index + value > _this.#size) return
 
                 index += value
-                return _this.get(index)
+                curr = _this.get(index)
+                return curr
             }
         }
         
@@ -573,6 +577,7 @@ class LinkedList {
      * @param {*} insert the values to be inserted
      * @returns {LinkedList} A linked list of all elements removed
     */
+
     cut(start, length, ...insert) {
         if(length < 0) {
             throw new Error("Cannot splice a negative length")
@@ -659,6 +664,7 @@ class LinkedList {
  * let some_node = new Node("Bye")
  * let node = new Node("Hello", some_node)
 */
+
 class Node {
     #value;
     #next;
@@ -669,6 +675,7 @@ class Node {
      * @param {Node | Null} next - (Optional) the reference to next node
      * @returns {Node} the node created
     */
+
     constructor(value, next = null) {
         this.#value = value
         this.#next = next
@@ -714,6 +721,7 @@ class Node {
      * @param {Node} node - the list to be copied
      * @returns {Node} the copy of the list
     */
+
     static copy(node) {
         return new Node(node.value, node.next)
     }
