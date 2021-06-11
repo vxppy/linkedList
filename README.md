@@ -12,11 +12,11 @@ Currently, you can't use `npm install linkedList` with this class, so you have t
 ### Importing
 To import the files, simply use 
 ```js
-const { LinkedList } = require("filepath/linkedList")
+const { SingleLinkedList, DoubleLinkedList } = require("filepath/linkedList")
 
 //or if you use relative path then
 
-const { LinkedList } = require("./location/linkedList")
+const { SingleLinkedList, DoubleLinkedList } = require("./location/linkedList")
 ```
 
 ### Using the class
@@ -24,22 +24,25 @@ You can use 2 classes avaible. To use all the classes(*basically error messages 
 
 To create a LinkedList
 ```js
-let list = new LinkedList()
+let list = new SingleLinkedList()
+let list2 = new DoubleLinkedList()
 ```
 To create a Node
 ```js
 let node = new Node()
+let node2 = new SingleNode()
+let node3 = new DoubleNode()
 ```
 
 ### Functions:
-#### 1. LinkedList:
+#### 1. SingleLinkedList:
 
 ```js
-linkedList.push(item)
+SingleLinkedList.push(item)
 
 //usage
 
-linkedList.push("Hello world")
+SingleLinkedList.push("Hello world")
 
 //You don't need to turn objects into nodes to add them. Node class is just for you to experiment with.
 //push() is also one of the only ways to add arrays as elements of linkedList. Don't push array >:(
