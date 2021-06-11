@@ -1,5 +1,6 @@
 const { SingleNode } = require("../nodes/nodes")
-const { IndexError, ItemError } = require("../errors/error")
+const { IndexError, ItemError, RangeError, NumError } = require("../errors/error")
+
 /**
  * A SingleLinkedList object. Can be used like arrays but items can't be accesed by index
  * @example
@@ -24,25 +25,45 @@ class SingleLinkedList {
         this.#size = 0
     }
 
+    /**
+     * Returns the size of the list
+     * @returns {Number}
+    */
+
     get size() {
         return this.#size
     }
+
+    /**
+     * Returns the first node in list
+     * @returns {*}
+    */
 
     get root() {
         return this.#head
     }
 
+    /**
+     * Returns the last node in list
+     * @returns {*}
+    */
+
     get tail() {
         return this.getNode(this.#size - 1)
     }
+
+    /**
+     * Returns if list is circular or not
+     * @returns {Boolean}
+    */
 
     get isCircular() {
         return this.#circular
     }
 
     /**
-     * Returns if listy is empty or not
-     * @returns {Boolean} is_list_empty?
+     * Returns if list is empty or not
+     * @returns {Boolean}
     */
 
     get isEmpty() {
@@ -52,7 +73,7 @@ class SingleLinkedList {
     /**
      * Add item to end of list
      * @example
-     * SingleLinkedList.push("Hello world")
+     * singleLinkedList.push("Hello world")
      * @param {any} item - Item to be added to the list
     */
 
@@ -77,7 +98,7 @@ class SingleLinkedList {
     /**
      * Add item to start of list
      * @example
-     * SingleLinkedList.pushStart("Hello world")
+     * singleLinkedList.pushStart("Hello world")
      * @param {any} item - Item to be added to the list
     */
 
@@ -88,7 +109,7 @@ class SingleLinkedList {
     /**
      * Add multipe items the of list
      * @example
-     * SingleLinkedList.pushMany(false, 1, 2, 3)
+     * singleLinkedList.pushMany(false, 1, 2, 3)
      * @param {Boolean} start wheater to insert at start or end
      * @param {*} items - Item to be added to the list
     */
@@ -109,7 +130,7 @@ class SingleLinkedList {
     /**
      * Removes item from end of list
      * @example
-     * SingleLinkedList.pop()
+     * singleLinkedList.pop()
      * @returns {any} Returns the value of item removed.
     */
 
@@ -120,7 +141,7 @@ class SingleLinkedList {
     /**
      * Removes item first item in the list
      * @example
-     * SingleLinkedList.popHead()
+     * singleLinkedList.popHead()
      * @returns {any} Returns the value of item removed.
     */
 
@@ -128,11 +149,10 @@ class SingleLinkedList {
         return this.removeAt(0)
     }
 
-
     /**
      * Removes items from the list. A positive number remvoes from end and negative from start
      * @example
-     * SingleLinkedList.popBy(1)
+     * singleLinkedList.popBy(1)
      * @param {Number} times Number of times to remove item
      * @returns {*[]} Returns the value of item removed.
     */
@@ -155,7 +175,7 @@ class SingleLinkedList {
     /** 
      * Removes item at specific index
      * @example
-     * SingleLinkedList.removeAt(2)
+     * singleLinkedList.removeAt(2)
      * //removes the item at index 2
      * @returns {any} Returns the value of item removed.
      * @param {Number} index - the index of the item. Must be Integer
@@ -187,7 +207,7 @@ class SingleLinkedList {
     /** 
      * Adds item at specific index
      * @example
-     * SingleLinkedList.insertAt("Hi", 2)
+     * singleLinkedList.insertAt("Hi", 2)
      * //Adds the "Hi" at index 2
      * @param {Number} index - the index of the item. Must be Integer
      * @param {any} item - the item to be added
@@ -204,6 +224,8 @@ class SingleLinkedList {
         if (index == 0) {
             node.next = this.#head;
             this.#head = node;
+
+            if(this.#circular) this.tail.next = node 
         } else {
             curr = this.#head;
             let it = 0;
@@ -223,7 +245,7 @@ class SingleLinkedList {
     /** 
      * Replaces the item specified at index with a the one provided
      * @example
-     * SingleLinkedList.replacesAt("Hi", 2)
+     * singleLinkedList.replacesAt("Hi", 2)
      * //Replace the item at index 2 with "Hi"
      * @param {Number} index - the index of the item. Must be Integer
      * @param {any} item - the item to be added
@@ -257,7 +279,7 @@ class SingleLinkedList {
     /**
      * Returns a string representation of the list
      * @example
-     * SingleLinkedList.join(", ")
+     * singleLinkedList.join(", ")
      * //returns a string with items seperated by ", "
      * @param {String} sep - the string to seperate the items by
      * @returns {String} string representation of list
@@ -283,7 +305,7 @@ class SingleLinkedList {
     /** 
      * Checks if item is in the list
      * @example
-     * SingleLinkedList.hasItemInList("Hello")
+     * singleLinkedList.hasItemInList("Hello")
      * @param {any} item - the item to check for
      * @returns {Boolean} true if found else false
     */
@@ -308,12 +330,11 @@ class SingleLinkedList {
     /** 
      * Returns the item at the index provided. If index out of bounds, throws error
      * @example
-     * SingleLinkedList.get(3)
+     * singleLinkedList.get(3)
      * //gives the item at index 3 if it exists
      * @param {Number} index - the index of the item. Must be Integer
      * @returns {any} the item at the index
     */
-
 
     get(index) {
         if (index < 0 || index >= this.#size) throw new IndexError(this.#size - 1)
@@ -330,7 +351,7 @@ class SingleLinkedList {
     /** 
      * Returns the node at the index provided. If index out of bounds, throws error
      * @example
-     * SingleLinkedList.getNode(3)
+     * singleLinkedList.getNode(3)
      * //gives the node at index 3 if it exists
      * @param {Number} index - the index of the item. Must be Integer
      * @returns {SingleNode} the node at the index
@@ -351,7 +372,7 @@ class SingleLinkedList {
     /** 
      * Finds the index of an item. Returns -1 if item not found
      * @example
-     * SingleLinkedList.search("Hello")
+     * singleLinkedList.search("Hello")
      * @param {any} item - the item to check for. 
      * @returns {Number} index of the item 
     */
@@ -360,13 +381,9 @@ class SingleLinkedList {
         let current = this.#head;
 
         let index = 0;
-        if (current == null) {
-            return -1
-        }
+        if (current == null) return -1
 
-        if (current.value == item) {
-            return index
-        }
+        if (current.value == item) return index
 
         while (current.hasNext()) {
             index++
@@ -376,13 +393,10 @@ class SingleLinkedList {
             current = current.next;
         }
 
-        if (current.value == item) {
-            return index
-        }
+        if (current.value == item) return index
 
         return -1
     }
-
 
     /**
      * Returns current item in iterable
@@ -412,7 +426,6 @@ class SingleLinkedList {
      * @param {Number} index the index to jump to
      * @returns {Boolean} 
     */
-
 
     /**
      * @typedef {Object} Iterable
@@ -531,8 +544,8 @@ class SingleLinkedList {
     /**
      * Shifts all elements by the number of times provided
      * @example
-     * SingleLinkedList.shiftBy(6)
-     * SingleLinkedList.shiftBy(-3)
+     * singleLinkedList.shiftBy(6)
+     * singleLinkedList.shiftBy(-3)
      * @param {Number} times the number of time to shift the items by. Must be Integer
      * @returns {void}
     */
@@ -553,9 +566,9 @@ class SingleLinkedList {
      * Splices a linked list. Overwrites the original and removes the spliced elements.
      * Returns a new linked list with removed elements
      * @example
-     * SingleLinkedList.splice(1, 3)
+     * singleLinkedList.splice(1, 3)
      * @example
-     * SingleLinkedList.splice(1, 3, "hello")
+     * singleLinkedList.splice(1, 3, "hello")
      * //"inserts hello at index 0"
      * @param {Number} start the start index of the splice. Must be Integer
      * @param {Number} end the end index of the splice. Must be Integer
@@ -570,7 +583,7 @@ class SingleLinkedList {
         if(end < start) {
             return list
         } else if(start < 0 || end < 0 || start >= this.#size || end >= this.#size) {
-            throw new Error(`${start < 0 || start >= this.#size ? "start" : "end"} is not in range from '0' to '${this.#size}'`)
+            throw new RangeError(start < 0 || start >= this.#size ? "start" : "end", this.#size)
         }
 
         for(let i = start; i <= end; i++) {
@@ -604,9 +617,9 @@ class SingleLinkedList {
      * Splices a linked list. Overwrites the original and removes the spliced elements.
      * Returns a new linked list with removed elements
      * @example
-     * SingleLinkedList.cut(1, 3)
+     * singleLinkedList.cut(1, 3)
      * @example
-     * SingleLinkedList.cut(1, 3, "hello")
+     * singleLinkedList.cut(1, 3, "hello")
      * //"inserts hello at index 0"
      * @param {Number} start the start index of the splice. Must be Integer
      * @param {Number} length the count of items to be spliced. Must be Integer
@@ -616,7 +629,7 @@ class SingleLinkedList {
 
     cut(start, length, ...insert) {
         if(length < 0) {
-            throw new Error("Cannot splice a negative length")
+            throw new NumError("Cannot splice a negative length")
         }
         return this.splice(start, start + length - 1, ...insert)
     }
@@ -700,7 +713,7 @@ class SingleLinkedList {
     /** 
      * Converts an given params to a Linked List
      * @example
-     * SingleLinkedList.toLinkedList(1, 2, ["hello", "bye"])
+     * singleLinkedList.toLinkedList(1, 2, ["hello", "bye"])
      * @param {*} data - the items to be converted
      * @returns {SingleLinkedList} the linked list of the items
     */
@@ -724,7 +737,7 @@ class SingleLinkedList {
     /** 
      * Makes a copy of list
      * @example
-     * SingleLinkedList.copy(SingleLinkedList)
+     * singleLinkedList.copy(SingleLinkedList)
      * @param {SingleLinkedList} list - the list to be copied
      * @returns {SingleLinkedList} the copy of the list
     */
@@ -740,18 +753,17 @@ class SingleLinkedList {
     /** 
      * Converts the linked list into an array
      * @example
-     * SingleLinkedList.toArray(SingleLinkedList)
+     * singleLinkedList.toArray(SingleLinkedList)
      * @param {SingleLinkedList} list - the list to be converted
      * @returns {Array} the array of the list
     */
 
     static toArray(list) {       
-        if(list.root == null) {
-            return []
-        }
+        if(list.root == null) return []
 
         let change = false
         if(list.isCircular) {
+            change = true
             list.makeNormal()
         }
 
