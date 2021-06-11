@@ -10,6 +10,17 @@ class IndexError extends Error {
     }
 }
 
+class RangeError extends Error {
+    constructor(item, size) {
+        super(`${item} not in range from 0 to ${size}`)
+    }
+}
+
+class NumError extends Error {
+    constructor(message) {
+        super(`${item} not in range from 0 to ${size}`)
+    }
+}
 module.exports = {
-    IndexError, ItemError
+    IndexError, ItemError, RangeError, NumError
 }
