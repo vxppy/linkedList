@@ -251,7 +251,7 @@ class SingleLinkedList {
      * @param {any} item - the item to be added
     */
 
-    replaceAt(index, item) {
+    set(index, item) {
         if (index < 0 || index >= this.#size) throw new IndexError(this.#size - 1)
 
         if (this.has(item) && this.search(item) != index) throw new ItemError(item)
@@ -660,8 +660,37 @@ class SingleLinkedList {
 
     swap(i, j) {
         let first_item = this.get(i)
-        this.replaceAt(i, this.get(j))
-        this.replaceAt(j, first_item)
+        let second_item = this.get(j)
+
+        this.set(i, null)
+        this.set(j, null)
+
+        this.set(i, second_item)
+        this.set(j, first_item)
+    }
+
+    /**
+     * @callback CompareFunction
+     * @param {*} a the first item
+     * @param {*} b the second item
+     * @returns {Number} the compare function result 
+     */
+
+    /**
+     * Sorts the list according to the compare function. Overwrites the original list
+     * @param {CompareFunction} compareFn 
+    */
+
+     sort(compareFn) {
+        let array = SingleLinkedList.toArray(this)
+
+        array.sort(compareFn)
+
+        this.#head = null
+
+        for(const i of array) {
+            this.push(i)
+        }
     }
 
     /**
@@ -684,7 +713,43 @@ class SingleLinkedList {
             return `SingleLinkedList: ${this.#head.toString()}`
         }
     }
+    
+    /**
+     * Compares the list with another list
+     * @param {SingleLinkedList} list the list to compare with 
+     * @param {Boolean} compareType whether to compare if the list are circular are not, or are of equal types
+     * @returns {Boolean}
+    */
 
+    equals(list, compareType = false) {
+        if(list == null || !(list instanceof SingleLinkedList)) return false
+        if(list.size != this.size) return false
+        if(compareType && list.isCircular != this.isCircular) return false
+
+        let change_1 = false
+        if(list.isCircular) {
+            list.makeNormal()
+            change_1 = true
+        }
+
+        let change_2 = false
+        if(this.isCircular) {
+            this.makeNormal()
+            change_2 = true
+        }
+
+        let iter1 = this.iterator()
+        let iter2 = list.iterator();
+
+        while(iter1.hasNext()) {
+            if(iter1.next() != iter2.next()) return false
+        }
+
+        if(change_1) list.makeCircular()
+        if(change_2) this.makeCircular()
+
+        return true
+    }
 
     /**
      * @callback callbackFunction 
