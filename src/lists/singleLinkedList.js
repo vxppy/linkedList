@@ -646,9 +646,22 @@ class SingleLinkedList {
     /**
      * Converts a circular list back to a normal one
     */
+
     makeNormal() {
         this.#circular = false
         this.tail.next = null
+    }
+
+    /**
+     * Swaps two items in the list
+     * @param {Number} i index of the first item
+     * @param {Number} j index of the second item
+    */
+
+    swap(i, j) {
+        let first_item = this.get(i)
+        this.replaceAt(i, this.get(j))
+        this.replaceAt(j, first_item)
     }
 
     /**
