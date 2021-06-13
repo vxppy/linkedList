@@ -1,5 +1,5 @@
 # linkedList
-An implementation of linkedList
+An implementation of linkedList in JavaScript. Provides 2 linkedlists, SingleLinked and DoubleLinked list
 
 This project is free to edit and make you can own version of this. But your help to improve this would be very helpful
 It is a class for JavaScript for Linked List. Currently only has Singly Linked List. Double Linked List is in progress.
