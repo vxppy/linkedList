@@ -256,10 +256,10 @@ class DoubleLinkedList {
      * @param {any} item - the item to be added
     */
 
-    replaceAt(index, item) {
+    set(index, item) {
         if (index < 0 || index >= this.#size) throw new IndexError(this.#size - 1)
 
-        if (this.has(item) && this.search(item) != index) throw new ItemError(item)
+        if (this.has(item) && this.search(item) != index && item != null) throw new ItemError(item)
 
         let node = new DoubleNode(item);
         let curr, prev;
@@ -608,7 +608,6 @@ class DoubleLinkedList {
 
     splice(start = 0, end = this.#size - 1, ...insert) {
         let list = new DoubleLinkedList()
-    
 
         if(end < start) {
             return list
@@ -688,10 +687,39 @@ class DoubleLinkedList {
      * @param {Number} j index of the second item
     */
 
-     swap(i, j) {
+    swap(i, j) {
         let first_item = this.get(i)
-        this.replaceAt(i, this.get(j))
-        this.replaceAt(j, first_item)
+        let second_item = this.get(j)
+
+        this.set(i, null)
+        this.set(j, null)
+
+        this.set(i, second_item)
+        this.set(j, first_item)
+    } 
+
+    /**
+     * @callback CompareFunction
+     * @param {*} a the first item
+     * @param {*} b the second item
+     * @returns {Number} the compare function result 
+     */
+
+    /**
+     * Sorts the list according to the compare function. Overwrites the original list
+     * @param {CompareFunction} compareFn 
+    */
+
+    sort(compareFn) {
+        let array = DoubleLinkedList.toArray(this)
+
+        array.sort(compareFn)
+
+        this.#head = null
+
+        for(const i of array) {
+            this.push(i)
+        }
     }
 
     /**
@@ -699,6 +727,60 @@ class DoubleLinkedList {
      * @param {*} item
      * @param {Number} index
      * @param {DoubleLinkedList} list 
+    */
+
+    /**
+     * Compares the list with another list
+     * @param {DoubleLinkedList} list the list to compare with 
+     * @param {Boolean} compareType whether to compare if the list are circular are not, or are of equal types
+     * @returns {Boolean}
+     */
+
+    equals(list, compareType = false) {
+        if(list == null || !(list instanceof DoubleLinkedList)) return false
+        if(list.size != this.size) return false
+        if(compareType && list.isCircular != this.isCircular) return false
+
+        let change_1 = false
+        if(list.isCircular) {
+            list.makeNormal()
+            change_1 = true
+        }
+
+        let change_2 = false
+        if(this.isCircular) {
+            this.makeNormal()
+            change_2 = true
+        }
+
+        let iter1 = this.iterator()
+        let iter2 = list.iterator();
+
+        while(iter1.hasNext()) {
+            if(iter1.next() != iter2.next()) return false
+        }
+
+        if(change_1) list.makeCircular()
+        if(change_2) this.makeCircular()
+
+        return true
+    }
+
+    /**
+     * Returns a string representation of the list. Currently in development
+     * @returns {String} a string representation of the DoubleLinkedList
+    */
+
+    toString() {
+        return `DoubleLinkedList: ${this.#head.toString()}`
+    }
+
+    /** 
+     * Makes a copy of list
+     * @example
+     * doubleLinkedList.copy(DoubleLinkedList)
+     * @param {DoubleLinkedList} list - the list to be copied
+     * @returns {DoubleLinkedList} the copy of the list
     */
 
     /**
@@ -731,28 +813,14 @@ class DoubleLinkedList {
         if(change) this.makeCircular()
     }
 
-    /**
-     * Returns a string representation of the list. Currently in development
-     * @returns {String} a string representation of the DoubleLinkedList
-    */
-
-    toString() {
-        return `DoubleLinkedList: ${this.#head.toString()}`
-    }
-
-    /** 
-     * Makes a copy of list
-     * @example
-     * doubleLinkedList.copy(DoubleLinkedList)
-     * @param {DoubleLinkedList} list - the list to be copied
-     * @returns {DoubleLinkedList} the copy of the list
-    */
-
     static copy(list) {
         let nlist = new DoubleLinkedList()
         for (let i = 0; i < list.size; i++) {
             nlist.push(list.get(i))
         }
+
+        if(list.isCircular) nlist.makeCircular()
+
         return nlist
     }
 
