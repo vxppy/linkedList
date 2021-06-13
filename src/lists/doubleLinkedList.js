@@ -683,6 +683,18 @@ class DoubleLinkedList {
     }
 
     /**
+     * Swaps two items in the list
+     * @param {Number} i index of the first item
+     * @param {Number} j index of the second item
+    */
+
+     swap(i, j) {
+        let first_item = this.get(i)
+        this.replaceAt(i, this.get(j))
+        this.replaceAt(j, first_item)
+    }
+
+    /**
      * @callback callbackFunction 
      * @param {*} item
      * @param {Number} index
